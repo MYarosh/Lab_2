@@ -18,7 +18,7 @@ function drawAxis() {
     ctx.moveTo(w, h/2);
     ctx.lineTo(w-7, h/2-3);
     drawDigitsY(ctx, i, w, h);
-    ctx.stroke();
+    ctx.stroke();/*
     ctx.strokeStyle = "grey";
     ctx.lineWidth = 1;
     ctx.moveTo(w/2-5*i, h/2-3*i);
@@ -26,7 +26,7 @@ function drawAxis() {
     ctx.lineTo(w/2+5*i, h/2+5*i);
     ctx.lineTo(w/2-5*i, h/2+5*i);
     ctx.lineTo(w/2-5*i, h/2-3*i);
-    ctx.stroke();
+    ctx.stroke();*/
 }
 function drawDigitsX(ctx, i, w, h) {
     let t=w/2;
@@ -59,16 +59,34 @@ function drawDigitsY(ctx, i, w, h) {
 function drawArea(r) {
     let h = canvas.height;
     let w = canvas.width;
-    ctx.strokeStyle = "#007765";
-    ctx.fillStyle = "#007765";
+    ctx.strokeStyle = "#0000ff";
+    ctx.fillStyle = "#0000ff";
+    if (r===2){
+        ctx.strokeStyle = "#00ff00";
+        ctx.fillStyle = "#00ff00";
+    }
+    if (r===3){
+        ctx.strokeStyle = "#ff0000";
+        ctx.fillStyle = "#ff0000";
+    }
+    if (r===4){
+        ctx.strokeStyle = "#00ffff";
+        ctx.fillStyle = "#00ffff";
+    }
+    if (r===5){
+        ctx.strokeStyle = "#ffff00";
+        ctx.fillStyle = "#ffff00";
+    }
+
     ctx.beginPath();
-    ctx.arc(w/2,h/2,r*i,0,Math.PI/2*3,true);
-    ctx.moveTo(w/2, h/2-r*i);
-    ctx.lineTo(w/2-r/2*i, h/2);
+    ctx.arc(w/2,h/2,r/2*i,Math.PI/2,Math.PI,false);
+    ctx.moveTo(w/2-r/2*i, h/2);
+    ctx.lineTo(w/2, h/2-r*i);
     ctx.lineTo(w/2, h/2);
-    ctx.lineTo(w/2, h/2+r/2*i);
-    ctx.lineTo(w/2+r*i, h/2+r/2*i);
     ctx.lineTo(w/2+r*i, h/2);
+    ctx.lineTo(w/2+r*i, h/2+r*i);
+    ctx.lineTo(w/2, h/2+r*i);
+    ctx.lineTo(w/2,h/2+r/2*i)
     ctx.fill();
 }
 function drawPoint(x, y, color) {
@@ -80,12 +98,12 @@ function drawPoint(x, y, color) {
 
 function drawPointsFromTable() {
     let table = document.getElementById("result-table");
-    if(document.getElementsByTagName("tbody")[0]){table = document.getElementsByTagName("tbody")[0]}
+    //if(document.getElementsByTagName("tbody")[0]){table = document.getElementsByTagName("tbody")[0]}
     if(table){
-        for(let i=0; i<table.children.length; i++){
+        for(let i=1; i<table.children.length; i++){
             let row = table.children[i];
             if(row.id!=="table-headers"&&Number(row.children[2].innerText)!==Number(rField.value)){
-                doAjax(row.children[0].innerText, row.children[1].innerText, rField.value, false)
+                doAjax(row.children[0].innerText, row.children[1].innerText, rField, false)
             }
             else if(row.id!=="table-headers"){
                 drawPoint(Number(row.children[0].innerText), Number(row.children[1].innerText), (row.children[3].innerText==="Да" ? "lime":"red"));

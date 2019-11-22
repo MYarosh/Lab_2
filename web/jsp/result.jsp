@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8" http-equiv="refresh">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
     <title>Lab1</title>
 
 </head>

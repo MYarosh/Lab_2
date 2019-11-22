@@ -12,27 +12,20 @@ public class AreaCheckServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        History history = (History) req.getSession().getAttribute("history");
+        History history = (History) req.getServletContext().getAttribute("history");
         double x;
         double y;
         double r;
-        int offset;
         try {
             x = Double.parseDouble(req.getParameter("X"));
             y = Double.parseDouble(req.getParameter("Y"));
             r = Double.parseDouble(req.getParameter("R"));
-            if (x > 5 || x < -5 || y < -5 || y > 3 || (r != 1 && r != 1.5 && r != 2 && r != 2.5 && r != 3)) {
+            if (x < -3 || x > 5 || y < -5 || y > 5 || (r != 1 && r != 2 && r != 3 && r != 4 && r != 5)) {
                 throw new NumberFormatException();
             }
         } catch (NumberFormatException e) {
             resp.getWriter().println("<h1>Incorrect parameters</h1>");
             return;
-        }
-        try {
-            offset = Integer.parseInt(req.getParameter("offset"));
-        }
-        catch (NumberFormatException e){
-            offset = 0;
         }
 
         GraphInfo point = new GraphInfo(x, y, r);
@@ -40,12 +33,12 @@ public class AreaCheckServlet extends HttpServlet {
             history.addPoint(point);
             resp.setContentType("text/json; charset=UTF-8");
             PrintWriter out = resp.getWriter();
-            out.println("{\"x\": " + point.getX() + ", \"y\": " + point.getY() + ", \"r\": " + point.getR() + ", \"inArea\": \"" + point.isHit() + "\"}");
+            out.println("{\"x\": " + point.getX() + ", \"y\": " + point.getY() + ", \"r\": " + point.getR() + ", \"isHit\": \"" + point.isHit() + "\"}");
         }
         else if(req.getParameter("type") != null && req.getParameter("type").equals("ajax-no-cache")){
             resp.setContentType("text/json; charset=UTF-8");
             PrintWriter out = resp.getWriter();
-            out.println("{\"x\": " + point.getX() + ", \"y\": " + point.getY() + ", \"r\": " + point.getR() + ", \"inArea\": \"" + point.isHit() + "\"}");
+            out.println("{\"x\": " + point.getX() + ", \"y\": " + point.getY() + ", \"r\": " + point.getR() + ", \"isHit\": \"" + point.isHit() + "\"}");
         }
         else {
             history.addPoint(point);
@@ -66,7 +59,7 @@ public class AreaCheckServlet extends HttpServlet {
                     "            Выполнил студент группы P3214 Ярошевский М.С.\n" +
                     "        </span>\n" +
                     "</div>\n" +
-                    "<div class=\"conta`iner\">" +
+                    "<div class=\"container\">" +
                     "    <h1>Результат обработки запроса</h1>" +
                     "    <table id=\"result-table\">" +
                     "        <tr><th>Координата X</th><th>Координата Y</th><th>Радиус</th><th>Попадание в область</th></tr>" +

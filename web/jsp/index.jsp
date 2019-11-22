@@ -7,7 +7,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
     <title>Lab2</title>
@@ -15,13 +15,14 @@
 </head>
 <body id="body">
 <script src="${pageContext.request.contextPath}/scripts/drawing.js"></script>
+<script src="${pageContext.request.contextPath}/scripts/doAjax.js"></script>
 <table border="0" cellpadding="0" cellspacing="0"  width="100%">
     <tr>
         <th></th>
         <th colspan="2" class="container task">
             <p class="container task">Ярошевский М.С.</p>
             <p class="container task">P3214</p>
-            <p class="container task">Вариант 214024</p>
+            <p class="container task">Вариант 215730</p>
         </th>
         <th></th>
     </tr>
@@ -34,7 +35,7 @@
     <tr>
         <td width="20%"></td>
         <td width="30%" class="container">
-            <form id="form1" action="ControllerServlet.java"  method="post"
+            <form id="form1" action=""  method="post"
             >
 
 
@@ -96,17 +97,6 @@
              history = new History();
          }%>
         <td colspan="2" class="container">
-            <%if (history.getList().size()>0){%>
-            <table id="result-table">
-                <tr id="table-headers"><th>Координата X</th><th>Координата Y</th><th>Радиус</th><th>Попадание в область</th></tr>
-                <%
-                    List<GraphInfo> list = new ArrayList<GraphInfo>(history.getList());
-                    Collections.reverse(list);
-                    for (GraphInfo p : list){%>
-                <tr><td><%=p.getX()%></td><td><%=p.getY()%></td><td><%=p.getR()%></td><td><%=p.isHit()%></td></tr>
-                <%}%>
-            </table>
-            <%}%>
         </td>
         <td>
         </td>
@@ -126,6 +116,20 @@
 
 
 </table>
+<br class="main">
+<%if (history.getList().size()>0){%>
+<h1>История запросов</h1>
+<button style="background: #111111;" type="button" onclick="clearHistory(); location.reload()" class="history-button"></button><br>
+<table id="result-table" class="container">
+    <tr id="table-headers"><th>Координата X</th><th>Координата Y</th><th>Радиус</th><th>Попадание в область</th></tr>
+    <%
+        List<GraphInfo> list = new ArrayList<GraphInfo>(history.getList());
+        Collections.reverse(list);
+        for (GraphInfo p : list){%>
+    <tr><td><%=p.getX()%></td><td><%=p.getY()%></td><td><%=p.getR()%></td><td><%=p.isHit()%></td></tr>
+    <%}%>
+</table>
+<%}%>
 <script >
 
     let b = document.getElementsByClassName("btn")[0];
@@ -165,7 +169,7 @@
         radio();
         if(rChecked){
             canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-            drawArea(Number(rField.value));
+            drawArea(Number(rField));
             drawAxis();
         }
         drawPointsFromTable();
@@ -301,15 +305,9 @@
         for (let i of boxes) {
             if (i.checked){
                 rChecked = true;
-                rField.value = i.value;
+                rField = i.value;
             }
         }
-        if(rChecked){
-            canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-            drawArea(Number(rField.value));
-            drawAxis();
-        }
-        drawPointsFromTable();
         blockButton();
 
     }
@@ -348,41 +346,8 @@
 
 
 
-     function doAjax(x, y, r, writable) {
-        let req = new XMLHttpRequest();
-        req.open("POST", document.documentURI, true);
 
-        req.onload = () =>{
-            console.log(req.responseText);
-            changePage(JSON.parse(req.responseText), writable);
-        }
-        req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        req.send(`X=${x}&Y=${y}&R=${r}&type=${writable ? "ajax" : "ajax-no-cache"}&offset=${offsetField.value}`)
-    }
-    function changePage(point, writable) {
-        drawPoint(point.x, point.y, (point.isHit()===true ? "lime":"red"));
-        if(writable) {
-            if (!document.getElementById("result-table")) {
-                let table = document.createElement("table");
-                table.id = "result-table";
-                let headers = document.createElement("tr");
-                headers.id = "table-headers";
-                headers.innerHTML = "<th>Координата X</th><th>Координата Y</th><th>Радиус</th><th>Попадание в область</th>";
-                let header = document.createElement("h1");
-                header.innerText = "История запросов";
-                let button = document.createElement("div");
-                button.innerHTML = "<button type=\"button\" onclick=\"clearHistory(); location.reload();\" class=\"history-button\">Очистить историю</button><br>";
-                document.getElementsByClassName("main")[0].append(header);
-                document.getElementsByClassName("main")[0].append(button);
-                document.getElementsByClassName("main")[0].append(table);
-                table.append(headers);
 
-            }
-            let row = document.createElement("tr");
-            row.innerHTML = `<td>${point.getX()}</td><td>${point.getY()}</td><td>${point.getR()}</td><td>${point.isHit()}</td>`;
-            document.getElementById("table-headers").after(row);
-        }
-    }
     function clearHistory() {
         let req = new XMLHttpRequest();
         req.open("POST", document.documentURI, true);
@@ -395,9 +360,11 @@
          if(rChecked){
              let obj = event.target;
              let x = Number(((event.pageX - window.pageXOffset - obj.getBoundingClientRect().x - obj.width/2)/i).toFixed(2));
+             console.log(x);
              let y = Number((-(event.pageY - window.pageYOffset - obj.getBoundingClientRect().y - obj.height/2)/i).toFixed(2));
-             if(x>=-5 && x<=5 && y>=-5 && y<=3){
-                 doAjax(x,y,rField.value, true)
+             console.log(y);
+             if(x>=-5 && x<=5 && y>=-5 && y<=5){
+                 doAjax(x,y,rField, true)
              }
          }
      }
