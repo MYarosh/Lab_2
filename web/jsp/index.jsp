@@ -117,7 +117,25 @@
 
 </table>
 <br class="main">
-<jsp:include  page="./table.jsp"/>
+<br class="main">
+<%
+
+    if (history == null){
+        history = new History();
+    }
+    //if (history.getList().size()>0){%>
+<h1>История запросов</h1>
+<button style="background: #111111;" type="button" onclick="clearHistory(); location.reload()" class="history-button">Очистить историю</button><br>
+<table id="result-table" class="container">
+    <tr id="table-headers"><th>Координата X</th><th>Координата Y</th><th>Радиус</th><th>Попадание в область</th></tr>
+    <%
+        List<GraphInfo> list = new ArrayList<GraphInfo>(history.getList());
+        Collections.reverse(list);
+        for (GraphInfo p : list){%>
+    <tr><td><%=p.getX()%></td><td><%=p.getY()%></td><td><%=p.getR()%></td><td><%=p.isHit()%></td></tr>
+    <%}%>
+</table>
+<%//}%>
 <script >
 
     let b = document.getElementsByClassName("btn")[0];
@@ -142,6 +160,7 @@
     let canvas = document.getElementsByTagName("canvas")[0];
     let ctx = canvas.getContext('2d');
     canvas.addEventListener("click", handleCanvasClick);
+    drawPointsFromTable();
 
     for (let i of boxes) {
         i.addEventListener("change", rb);
@@ -152,6 +171,8 @@
     var rField = 0;
 
     drawAxis();
+
+    drawPointsFromTable();
 
     function rb(event){
         radio();
@@ -342,6 +363,7 @@
         req.open("POST", document.documentURI, true);
         req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         req.send("type=clear");
+        console.log(req.getResponseHeader("type"));
     }
 
      function handleCanvasClick(event) {
@@ -358,6 +380,26 @@
          }
      }
      canvas.addEventListener("click", handleCanvasClick);
+
+    function drawPointsFromTable() {
+        let table = document.getElementById("result-table");
+        if(document.getElementsByTagName("tbody")[1]){table = document.getElementsByTagName("tbody")[1]}
+        if(table){
+            console.log("erty");
+            console.log(table.children[0]);
+            for(let i=1; i<table.children.length; i++){
+                let row = table.children[i];
+                if(row.id!=="table-headers"&&Number(row.children[2].innerText)!==Number(rField)){
+                    /*console.log(Number(row.children[2].innerText));
+                    doAjax(row.children[0].innerText, row.children[1].innerText, rField, false)*/
+                }
+                else if(row.id!=="table-headers"){
+                    console.log(Number(row.children[2].innerText));
+                    drawPoint(Number(row.children[0].innerText), Number(row.children[1].innerText), (row.children[3].innerText==="true" ? "lime":"red"));
+                }
+            }
+        }
+    };
 </script>
 </body>
 </html>

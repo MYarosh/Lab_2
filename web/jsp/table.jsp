@@ -13,7 +13,7 @@
     }
     //if (history.getList().size()>0){%>
 <h1>История запросов</h1>
-<button style="background: #111111;" type="button" onclick="clearHistory(); location.reload()" class="history-button"></button><br>
+<button style="background: #111111;" type="button" onclick="clearHistory(); location.reload()" class="history-button">Очистить историю</button><br>
 <table id="result-table" class="container">
     <tr id="table-headers"><th>Координата X</th><th>Координата Y</th><th>Радиус</th><th>Попадание в область</th></tr>
     <%

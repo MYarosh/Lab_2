@@ -50,7 +50,7 @@ public class AreaCheckServlet extends HttpServlet {
                     "    <title>Lab 2</title>\n" +
                     "    <link rel=\"stylesheet\" href=\"" + req.getContextPath() + "/css/main.css\">\n" +
                     "</head>\n" +
-                    "<body>\n" +
+                    "<body id=\"body\">\n" +
                     "<div class=\"container task\">\n" +
                     "        <span id=\"head-title\">\n" +
                     "            Лабораторная работа №2. Вариант 215730\n" +

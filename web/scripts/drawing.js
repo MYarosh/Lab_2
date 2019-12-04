@@ -97,6 +97,8 @@ function drawPoint(x, y, color) {
 }
 
 function drawPointsFromTable() {
+
+    console.log("qwertyui");
     let table = document.getElementById("result-table");
     //if(document.getElementsByTagName("tbody")[0]){table = document.getElementsByTagName("tbody")[0]}
     if(table){
