@@ -4,7 +4,7 @@ public class GraphInfo {
     private double x;
     private double y;
     private double r;
-    private boolean isHit;
+    public boolean isHit;
 
     public GraphInfo(double x, double y, double r){
         this.x = x;
@@ -28,7 +28,7 @@ public class GraphInfo {
     public String toString(){
         return "X="+x+", Y="+y+", R="+r+(isHit ? " Да" : " Нет");
     }
-    public String isHit(){
-        return isHit ? "Да" : "Нет";
+    public boolean isHit(){
+        return isHit;
     }
 }

@@ -117,19 +117,7 @@
 
 </table>
 <br class="main">
-<%if (history.getList().size()>0){%>
-<h1>История запросов</h1>
-<button style="background: #111111;" type="button" onclick="clearHistory(); location.reload()" class="history-button"></button><br>
-<table id="result-table" class="container">
-    <tr id="table-headers"><th>Координата X</th><th>Координата Y</th><th>Радиус</th><th>Попадание в область</th></tr>
-    <%
-        List<GraphInfo> list = new ArrayList<GraphInfo>(history.getList());
-        Collections.reverse(list);
-        for (GraphInfo p : list){%>
-    <tr><td><%=p.getX()%></td><td><%=p.getY()%></td><td><%=p.getR()%></td><td><%=p.isHit()%></td></tr>
-    <%}%>
-</table>
-<%}%>
+<jsp:include  page="./table.jsp"/>
 <script >
 
     let b = document.getElementsByClassName("btn")[0];
@@ -171,6 +159,7 @@
             canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
             drawArea(Number(rField));
             drawAxis();
+            drawPointsFromTable();
         }
         drawPointsFromTable();
     }
@@ -363,7 +352,7 @@
              console.log(x);
              let y = Number((-(event.pageY - window.pageYOffset - obj.getBoundingClientRect().y - obj.height/2)/i).toFixed(2));
              console.log(y);
-             if(x>=-5 && x<=5 && y>=-5 && y<=5){
+             if(x>=-3 && x<=5 && y>=-3 && y<=5){
                  doAjax(x,y,rField, true)
              }
          }

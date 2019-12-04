@@ -8,11 +8,13 @@ function doAjax(x, y, r, writable) {
     };
     req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     console.log(`X=${x}&Y=${y}&R=${r}&type=${writable ? "ajax" : "ajax-no-cache"}`);
-    req.send(`X=${x}&Y=${y}&R=${r}&type=${writable ? "ajax" : "ajax-no-cache"}`)
+    req.send(`X=${x}&Y=${y}&R=${r}&type=${writable ? "ajax" : "ajax-no-cache"}`);
 }
 
 function changePage(point, writable) {
-    drawPoint(point.x, point.y, (point.isHit===true ? "lime":"red"));
+    console.log(point.isHit);
+    console.log(point.isHit==="true" ? "lime":"red");
+    drawPoint(point.x, point.y, (point.isHit==="true" ? "lime":"red"));
     if(writable) {
         if (!document.getElementById("result-table")) {
             let table = document.createElement("table");

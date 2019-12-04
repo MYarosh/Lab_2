@@ -1,27 +1,26 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="main.GraphInfo" %>
 <%@ page import="main.History" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Collections" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    History history =  ((History)request.getServletContext().getAttribute("history"));
+<br class="main">
+<%History history = (History)request.getServletContext().getAttribute("history");
+
     if (history == null){
         history = new History();
     }
-%>
-<tr>
-    <td style="colour:beige">X</td> <td class="container">Y</td> <td  class="container">R</td> <td style="colour:beige">Result</td>
-</tr>
-<%
-    ArrayList <GraphInfo> points = (ArrayList<GraphInfo>) history.getList();
-    for (int i =0; i<points.size(); i++) {
-%>
-<tr>
-    <td><%= points.get(i).getX()%></td>
-    <td><%= points.get(i).getY()%></td>
-    <td><%= points.get(i).getR()%></td>
-    <td><%= points.get(i).isHit()%>></td>
-</tr>
-<%
-    }
-%>
+    //if (history.getList().size()>0){%>
+<h1>История запросов</h1>
+<button style="background: #111111;" type="button" onclick="clearHistory(); location.reload()" class="history-button"></button><br>
+<table id="result-table" class="container">
+    <tr id="table-headers"><th>Координата X</th><th>Координата Y</th><th>Радиус</th><th>Попадание в область</th></tr>
+    <%
+        List<GraphInfo> list = new ArrayList<GraphInfo>(history.getList());
+        Collections.reverse(list);
+        for (GraphInfo p : list){%>
+    <tr><td><%=p.getX()%></td><td><%=p.getY()%></td><td><%=p.getR()%></td><td><%=p.isHit()%></td></tr>
+    <%}%>
+</table>
+<%//}%>

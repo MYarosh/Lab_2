@@ -103,9 +103,11 @@ function drawPointsFromTable() {
         for(let i=1; i<table.children.length; i++){
             let row = table.children[i];
             if(row.id!=="table-headers"&&Number(row.children[2].innerText)!==Number(rField.value)){
+                console.log(Number(row.children[2].innerText));
                 doAjax(row.children[0].innerText, row.children[1].innerText, rField, false)
             }
             else if(row.id!=="table-headers"){
+                console.log(Number(row.children[2].innerText));
                 drawPoint(Number(row.children[0].innerText), Number(row.children[1].innerText), (row.children[3].innerText==="Да" ? "lime":"red"));
             }
         }
