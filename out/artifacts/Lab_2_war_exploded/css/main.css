@@ -1,0 +1,23 @@
+#body{
+    background-color: #111111;
+}
+.container{
+    background-color: #9f82f9;
+}
+tr > td{
+    padding-left: 5px;
+}
+.container:first-letter{
+    font-size: 20px;
+    color: red;
+}
+.task{
+    font-family: fantasy !important;
+    background-color: #7f62d9;
+}
+td > label{
+    color: red;
+}
+.warn-text{
+    color: red;
+}
