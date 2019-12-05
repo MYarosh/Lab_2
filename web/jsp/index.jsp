@@ -390,8 +390,8 @@
             for(let i=1; i<table.children.length; i++){
                 let row = table.children[i];
                 if(row.id!=="table-headers"&&Number(row.children[2].innerText)!==Number(rField)){
-                    /*console.log(Number(row.children[2].innerText));
-                    doAjax(row.children[0].innerText, row.children[1].innerText, rField, false)*/
+                    console.log(Number(row.children[2].innerText));
+                    doAjax(row.children[0].innerText, row.children[1].innerText, rField, false)
                 }
                 else if(row.id!=="table-headers"){
                     console.log(Number(row.children[2].innerText));

@@ -5,8 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import main.GraphInfo;
-import main.History;
 
 public class AreaCheckServlet extends HttpServlet {
 
