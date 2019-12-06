@@ -77,7 +77,7 @@
 
             </form>
 
-        <td class="container"><canvas id="cnv" width="300" height="300" style="background-color: white"></canvas></td>
+        <td class="container"><canvas id="cnv" width="300" height="300"></canvas></td>
         <td width="20%"></td>
     </tr>
     <tr>
@@ -374,7 +374,7 @@
              console.log(x);
              let y = Number((-(event.pageY - window.pageYOffset - obj.getBoundingClientRect().y - obj.height/2)/i).toFixed(2));
              console.log(y);
-             if(x>=-3 && x<=5 && y>=-3 && y<=5){
+             if(x>=-5 && x<=5 && y>=-5 && y<=5){
                  doAjax(x,y,rField, true)
              }
          }
@@ -389,9 +389,9 @@
             console.log(table.children[0]);
             for(let i=1; i<table.children.length; i++){
                 let row = table.children[i];
-                if(row.id!=="table-headers"&&Number(row.children[2].innerText)!==Number(rField)){
-                    /*console.log(Number(row.children[2].innerText));
-                    doAjax(row.children[0].innerText, row.children[1].innerText, rField, false)*/
+                if(row.id!=="table-headers"&&Number(row.children[2].innerText)!=Number(rField)){
+                    console.log(Number(row.children[2].innerText));
+                    doAjax(row.children[0].innerText, row.children[1].innerText, rField, false)
                 }
                 else if(row.id!=="table-headers"){
                     console.log(Number(row.children[2].innerText));

@@ -18,7 +18,7 @@ public class AreaCheckServlet extends HttpServlet {
             x = Double.parseDouble(req.getParameter("X"));
             y = Double.parseDouble(req.getParameter("Y"));
             r = Double.parseDouble(req.getParameter("R"));
-            if (x < -3 || x > 5 || y < -5 || y > 5 || (r != 1 && r != 2 && r != 3 && r != 4 && r != 5)) {
+            if (x < -5 || x > 5 || y < -5 || y > 5 || (r != 1 && r != 2 && r != 3 && r != 4 && r != 5)) {
                 throw new NumberFormatException();
             }
         } catch (NumberFormatException e) {
