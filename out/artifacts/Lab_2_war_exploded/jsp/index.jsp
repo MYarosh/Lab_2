@@ -3,7 +3,6 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Collections" %>
 <%@ page import="main.History" %>
-<%@ page import="java.util.concurrent.ExecutionException" %>
 <%@ page contentType="text/html;charset=UTF-8"%>
 <html>
 <head>
@@ -135,7 +134,7 @@
     }
     //if (history.getList().size()>0){%>
 <h1>История запросов</h1>
-<button style="background: #111111;" type="button" onclick="clearHistory(); location.reload()" class="history-button">Очистить историю</button><br>
+<button style="background: #111111;" type="button" onclick="clearHistory();" class="history-button">Очистить историю</button><br>
 <table id="result-table" class="container">
     <tr id="table-headers"><th>Координата X</th><th>Координата Y</th><th>Радиус</th><th>Попадание в область</th></tr>
     <%
@@ -405,6 +404,7 @@
         req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         req.send("type=clear");
         console.log(req.getResponseHeader("type"));
+        location.replace(document.documentURI);
     }
 
      function handleCanvasClick(event) {
