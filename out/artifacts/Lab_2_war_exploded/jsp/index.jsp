@@ -3,6 +3,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Collections" %>
 <%@ page import="main.History" %>
+<%@ page import="java.util.concurrent.ExecutionException" %>
 <%@ page contentType="text/html;charset=UTF-8"%>
 <html>
 <head>
@@ -16,6 +17,7 @@
 <body id="body">
 <script src="${pageContext.request.contextPath}/scripts/drawing.js"></script>
 <script src="${pageContext.request.contextPath}/scripts/doAjax.js"></script>
+<script src="${pageContext.request.contextPath}/scripts/bignumber.js"></script>
 <table border="0" cellpadding="0" cellspacing="0"  width="100%">
     <tr>
         <th></th>
@@ -86,6 +88,7 @@
             <label hidden name="warning_x">Выберите один X</label>
             <label hidden name="warning_y_area">Число Y выходит за пределы</label>
             <label hidden name="warning_y_num">Введено не число в поле Y</label>
+            <label hidden name="w">Возможны погрешности в поле Y</label>
         </td>
         <td></td>
     </tr>
@@ -117,6 +120,13 @@
 
 </table>
 <br class="main">
+<% try {
+    int r = (int) request.getServletContext().getAttribute("r");
+}catch(Exception e){
+    request.getServletContext().setAttribute("r",1);
+}
+    %>
+<div id="rr" style="color: #111111"><%=request.getServletContext().getAttribute("r")%></div>
 <br class="main">
 <%
 
@@ -146,7 +156,7 @@
     let w_x = document.getElementsByName("warning_x");
     let w_y_num = document.getElementsByName("warning_y_num");
     let w_y_area = document.getElementsByName("warning_y_area");
-    let yField = document.forms["form1"]["Y"];
+    let yField = new BigNumber(document.forms["form1"]["Y"].value);
     let boxes = document.getElementsByName("R") ;
     let xChecked = false;
     let yChecked = false;
@@ -154,8 +164,8 @@
     let change = 10;
     let r = false;
     var R = 0;
-    var X = 0;
-    var Y = 0;
+    var X = -10;
+    var Y = -10;
     let i = 25;
     let canvas = document.getElementsByTagName("canvas")[0];
     let ctx = canvas.getContext('2d');
@@ -168,14 +178,41 @@
     document.forms["form1"]["offset"].value = new Date().getTimezoneOffset();
     console.log(document.forms["form1"]["offset"].value);
     var offset = Number(document.forms["form1"]["offset"].value);
-    var rField = 0;
+    rr = document.getElementById("rr").innerText;
+    var rField = Number(rr);
+    console.log(rField);
+    console.log("asd");
 
-    drawAxis();
 
-    drawPointsFromTable();
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+        drawArea(Number(rr));
+        drawAxis();
+        drawPointsFromTable();
+
+
+
+    function rad() {
+        if (rField == 1){
+            document.getElementById("b1").checked = true;
+        }else if (rField == 2){
+            document.getElementById("b2").checked = true;
+        }else if (rField == 3){
+            document.getElementById("b3").checked = true;
+        }else if (rField == 4){
+            document.getElementById("b4").checked = true;
+        }else if (rField == 5){
+            document.getElementById("b5").checked = true;
+        }
+
+    }
+
+
+
 
     function rb(event){
         radio();
+        doAjax(X, Y, rField, false);
+        console.log(rChecked);
         if(rChecked){
             canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
             drawArea(Number(rField));
@@ -323,21 +360,25 @@
     }
 
     function checkY(event) {
-        yField.value = yField.value.replace(",", ".");
-        if (!isFinite(Number(yField.value)) || !(/0*/).test(yField.value) && Number(yField.value) === 0) {
+        document.forms["form1"]["Y"].value = document.forms["form1"]["Y"].value.replace(",", ".");
+        yField = new BigNumber(document.forms["form1"]["Y"].value);
+        if (yField.length>10){
+            document.getElementsByClassName("w")[0].hidden=false;
+        }
+        if (!isFinite(document.forms["form1"]["Y"].value) || !(/0*/).test(document.forms["form1"]["Y"].value) && yField === 0) {
             event.preventDefault();
-            yField.classList.add("warn-text");
+            document.forms["form1"]["Y"].classList.add("warn-text");
             yChecked = false;
             w_y_num[0].hidden = false;
             w_y_area[0].hidden = true;
-        } else if (Number(yField.value) < -3 || Number(yField.value) > 5) {
+        } else if (yField< -3 || yField > 5) {
             event.preventDefault();
-            yField.classList.add("warn-text");
+            document.forms["form1"]["Y"].classList.add("warn-text");
             yChecked = false;
             w_y_num[0].hidden = true;
             w_y_area[0].hidden = false;
         } else {
-            yField.classList.remove("warn-text");
+            document.forms["form1"]["Y"].classList.remove("warn-text");
             yChecked = true;
             w_y_num[0].hidden = true;
             w_y_area[0].hidden = true;
@@ -386,7 +427,7 @@
         if(document.getElementsByTagName("tbody")[1]){table = document.getElementsByTagName("tbody")[1]}
         if(table){
             console.log("erty");
-            console.log(table.children[0]);
+            console.log(table.children[1]);
             for(let i=1; i<table.children.length; i++){
                 let row = table.children[i];
                 if(row.id!=="table-headers"&&Number(row.children[2].innerText)!=Number(rField)){
@@ -395,6 +436,7 @@
                 }
                 else if(row.id!=="table-headers"){
                     console.log(Number(row.children[2].innerText));
+                    doAjax(row.children[0].innerText, row.children[1].innerText, rField, false);
                     drawPoint(Number(row.children[0].innerText), Number(row.children[1].innerText), (row.children[3].innerText==="true" ? "lime":"red"));
                 }
             }

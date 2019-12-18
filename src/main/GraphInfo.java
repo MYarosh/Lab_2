@@ -3,10 +3,10 @@ package main;
 public class GraphInfo {
     private double x;
     private double y;
-    private double r;
+    private int r;
     public boolean isHit;
 
-    public GraphInfo(double x, double y, double r){
+    public GraphInfo(double x, double y, int r){
         this.x = x;
         this.y = y;
         this.r = r;

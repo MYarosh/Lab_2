@@ -1,5 +1,7 @@
 package main;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,11 +15,12 @@ public class AreaCheckServlet extends HttpServlet {
         History history = (History) req.getServletContext().getAttribute("history");
         double x;
         double y;
-        double r;
+        int r;
         try {
             x = Double.parseDouble(req.getParameter("X"));
             y = Double.parseDouble(req.getParameter("Y"));
-            r = Double.parseDouble(req.getParameter("R"));
+            r = Integer.parseInt(req.getParameter("R"));
+            req.getServletContext().setAttribute("r",r);
             if (x < -5 || x > 5 || y < -5 || y > 5 || (r != 1 && r != 2 && r != 3 && r != 4 && r != 5)) {
                 throw new NumberFormatException();
             }
@@ -42,7 +45,13 @@ public class AreaCheckServlet extends HttpServlet {
             history.addPoint(point);
             resp.setContentType("text/html; charset=UTF-8");
             PrintWriter out = resp.getWriter();
-            out.println("<html>\n" +
+            try {
+                RequestDispatcher requestDispatcher = req.getRequestDispatcher("/jsp/index.jsp");
+                requestDispatcher.forward(req, resp);
+            }catch (ServletException e){
+                e.printStackTrace();
+            }
+            /*out.println("<html>\n" +
                     "<head>\n" +
                     "    <meta charset=\"UTF-8\">\n" +
                     "    <title>Lab 2</title>\n" +
@@ -64,7 +73,7 @@ public class AreaCheckServlet extends HttpServlet {
                     "        <tr><td>" + point.getX() + "</td><td>" + point.getY() + "</td><td>" + point.getR() + "</td><td>" + point.isHit() + "</td>" +
                     "    </table>" +
                     "<a href=\"" + req.getContextPath() + "\"><button class=\"submit-button\">Назад</button></a>" +
-                    "</div></body></html>");
+                    "</div></body></html>");*/
         }
 
     }

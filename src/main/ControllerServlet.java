@@ -15,6 +15,7 @@ public class ControllerServlet extends HttpServlet {
         }
         else if(req.getParameter("X")==null || req.getParameter("Y")==null){
             RequestDispatcher requestDispatcher = req.getRequestDispatcher("/jsp/index.jsp");
+            req.getServletContext().setAttribute("r",Integer.parseInt(req.getParameter("R")));
             requestDispatcher.forward(req, resp);
         }
         else{
